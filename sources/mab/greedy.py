@@ -1,5 +1,5 @@
 import numpy as np
-from base import Base
+from .base import Base
 
 '''
 Inspired by:
@@ -44,7 +44,7 @@ class EGreedy(Base):
         if self.epsilon == 0 and self.n_pulls == 0:
             arm = np.random.choice(self.k)
         elif p < self.epsilon:
-            # Randomly select an action
+            # Randomly select an action (cluster)            
             arm = np.random.choice(self.k)
         else:
             # Take greedy action
