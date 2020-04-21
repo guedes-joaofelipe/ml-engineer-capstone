@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 import zipfile
 import sys
+import numpy as np
 
 def create_folder(fullpath, verbose=True):    
     """
@@ -49,6 +50,73 @@ def check_file(filepath, verbose = True):
 
     print ('File does NOT exist in ' + filepath) if verbose else ''
     return False
+
+def mean_absolute_error(df):
+    """ Calculates the mean absolute error between true and predicted items
+    
+    Arguments:
+        df {pd.DataFrame} -- dataframe with columns 'rating' and 'predition'
+    
+    Returns:
+        [float] -- mean absolute error
+    """    
+
+    return np.mean(np.absolute(df["rating"]-df["prediction"]))
+
+
+def root_mean_squared_error(df):
+    """ Calculates the root mean squared error between true and predicted items
+    
+    Arguments:
+        df {pd.DataFrame} -- dataframe with columns 'rating' and 'predition'
+    
+    Returns:
+        [float] -- root mean squared error
+    """    
+    
+    return np.sqrt(np.mean((np.absolute(df["rating"]-df["prediction"]))**2))
+
+
+def precision_at_k(df, k, threshold = 7.0):
+    """ Calculates the precision@k for recommended items
+    
+    Arguments:
+        df {pd.DataFrame} -- dataframe with columns 'rating' and 'predition'
+        k {int} -- maximum rank to analyze
+        threshold {float} -- minimum prediction value to recommend
+    
+    Returns:
+        [float] -- precision@k value
+    """  
+
+    # removing items where true rating is unknown
+    df = df.query("rating > 0").copy()
+    
+    df.sort_values(by=["u_id", "prediction"], ascending=False, inplace=True)
+
+    for column in ["prediction", "rating"]:
+        df[column + "_rank"] = df.groupby(["u_id"])[column].rank(ascending=False).astype(int)
+
+    df["recommended"] = df["prediction"].apply(lambda x: 1 if x >= threshold else 0)
+    df["consumed"] = df["rating"].apply(lambda x: 1 if x >= threshold else 0)
+    df["hit"] = df["recommended"]*df["consumed"]
+    
+    return df.query("prediction_rank <= @k").groupby("u_id")["hit"].mean().mean()
+
+def recall_at_k(df, k, threshold = 7):        
+
+    df = df.query("rating > 0").copy()
+    
+    df.sort_values(by=["u_id", "prediction"], ascending=False, inplace=True)
+
+    for column in ["prediction", "rating"]:
+        df[column + "_rank"] = df.groupby(["u_id"])[column].rank(ascending=False).astype(int)
+
+    df["recommended"] = df["prediction"].apply(lambda x: 1 if x >= threshold else 0)
+    df["consumed"] = df["rating"].apply(lambda x: 1 if x >= threshold else 0)
+    df["hit"] = df["recommended"]*df["consumed"]
+    
+    return df.query("rating_rank <= @k").groupby("u_id")["hit"].mean().mean()
 
 class ProgressBar:
     def __init__(self, bar_length = 10, bar_fill = '#', elapsed_time=False):                
