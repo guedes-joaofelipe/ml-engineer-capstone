@@ -1,0 +1,6 @@
+{"palette": "purple", 
+ "custom_palette": ["#60489D", "#46BB93", "#F9B74D", "#2D2D2D", "#9F1253", "#A9A8A8", "#56DCE3", "#4260AD"],
+ "channels": ["email", "mobile", "social", "web"],
+ "n_factors": 100,
+ "n_clusters": 5 
+}
