@@ -3,6 +3,7 @@ from datetime import datetime
 import zipfile
 import sys
 import numpy as np
+import json
 
 def create_folder(fullpath, verbose=True):    
     """
@@ -18,7 +19,6 @@ def create_folder(fullpath, verbose=True):
     else:
         print ("Folder " + fullpath + " already exists.") if verbose else ''
     
-
 def unzip_file(input_filepath, output_folder, verbose = True):
     """
     Function to unzip files
@@ -40,8 +40,8 @@ def unzip_file(input_filepath, output_folder, verbose = True):
 def check_file(filepath, verbose = True):
     """
     Checks if file in filepath exists
-        :param filepath: file to path
-        :param verbose=True: boolean indicating printing log
+        :param filepath: path to file
+        :param verbose: boolean indicating printing log
     """
 
     if os.path.isfile(filepath):
@@ -50,6 +50,21 @@ def check_file(filepath, verbose = True):
 
     print ('File does NOT exist in ' + filepath) if verbose else ''
     return False
+
+def load_json_file(filepath, verbose = False):
+    """
+    Loads json from *.json file into a variable. If file not found, returns None
+        :param filepath: path to file
+        :param verbose: boolean indicating printing log
+    """
+    if not check_file(filepath, verbose=verbose):
+        return None
+    
+    with open(filepath) as json_file:
+        data = json.load(json_file)
+        
+    return data
+
 
 def mean_absolute_error(df):
     """ Calculates the mean absolute error between true and predicted items
@@ -175,6 +190,8 @@ class ProgressBar:
         return str(self.last_update-self.start_time).split('.')[0]
 
 if __name__ == "__main__":
-    create_folder('./../data')
-    check_file('./../data/brazilian-ecommerce.zip')
-    unzip_file('./../data/brazilian-ecommerce.zip', './../data')
+    # create_folder('./../data')
+    # check_file('./../data/brazilian-ecommerce.zip')
+    # unzip_file('./../data/brazilian-ecommerce.zip', './../data')
+    
+    print (load_json_file("./config.json")["palette"])
