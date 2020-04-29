@@ -23,12 +23,12 @@ Globals:
       Role: !Ref CodeDeployRole
 Resources:
   # Definição da Função Lambda.
-  Unparser:
+  get_user_rec:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: get_user_rec
       Handler: handler.handler
-      Runtime: python3.7
+      Runtime: python3.8
       Description: "Função que faz a intermediacao do API Gateway com o SQS"
       MemorySize: 256
       Timeout: 900
