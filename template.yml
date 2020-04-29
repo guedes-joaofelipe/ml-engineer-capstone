@@ -23,10 +23,10 @@ Globals:
       Role: !Ref CodeDeployRole
 Resources:
   # Definição da Função Lambda.
-  getUserRec:
+  GetUserRec:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: getUserRec
+      FunctionName: GetUserRec
       Handler: handler.handler
       Runtime: python3.8
       Description: "Função que faz a intermediacao do API Gateway com o SQS"
