@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform:
-- AWS::Serverless-2016-10-31
-- AWS::CodeStar
+  - AWS::Serverless-2016-10-31
+  - AWS::CodeStar
 
 Parameters:
   ProjectId:
@@ -13,50 +13,43 @@ Parameters:
   Stage:
     Type: String
     Description: The name for a project pipeline stage, such as Staging or Prod, for which resources are provisioned and deployed.
-    Default: ''
-
+    Default: ""
 Globals:
   Function:
-    AutoPublishAlias: live
+    AutoPublishAlias: prod
     DeploymentPreference:
       Enabled: true
-      Type: Canary10Percent5Minutes
+      Type: AllAtOnce
       Role: !Ref CodeDeployRole
-
 Resources:
-  HelloWorld:
+  # Definição da Função Lambda.
+  Unparser:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub 'awscodestar-${ProjectId}-lambda-HelloWorld'
-      Handler: index.handler
+      FunctionName: get_user_rec
+      Handler: handler.handler
       Runtime: python3.7
-      Role:
-        Fn::GetAtt:
-        - LambdaExecutionRole
-        - Arn
-      Events:
-        GetEvent:
-          Type: Api
-          Properties:
-            Path: /
-            Method: get
-        PostEvent:
-          Type: Api
-          Properties:
-            Path: /
-            Method: post
-  LambdaExecutionRole:
-    Description: Creating service role in IAM for AWS Lambda
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Sub 'CodeStar-${ProjectId}-Execution${Stage}'
-      AssumeRolePolicyDocument:
-        Statement:
-        - Effect: Allow
-          Principal:
-            Service: [lambda.amazonaws.com]
-          Action: sts:AssumeRole
-      Path: /
-      ManagedPolicyArns:
-        - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-      PermissionsBoundary: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:policy/CodeStar_${ProjectId}_PermissionsBoundary'
+      Description: "Função que faz a intermediacao do API Gateway com o SQS"
+      MemorySize: 256
+      Timeout: 900
+      Role: arn:aws:iam::595380434278:role/service-role/LambdaRole
+      # Environment:
+      #   Variables:
+      #     DB_USER: xxx
+      #     DB_PASSWORD: xxx
+      #     DB_HOST: xxx
+      #     DB_PORT: xxx
+      #     DB_DATABASE: xxx
+
+      # Configuração da VPC para acesso ao RDS
+      # VpcConfig:
+      #   SecurityGroupIds:
+      #     - sg-xxx
+      #   SubnetIds:
+      #     - subnet-xxx
+      #     - subnet-xxx
+      #     - subnet-xxx
+
+      # Configuração das Layers utilizadas na Função Lambda
+      Layers:
+        - !Sub arn:aws:lambda:us-east-1:595380434278:layer:layer_do_patrick:1
