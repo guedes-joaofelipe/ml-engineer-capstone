@@ -32,7 +32,9 @@ Resources:
       Description: "Função que faz a intermediacao do API Gateway com o SQS"
       MemorySize: 256
       Timeout: 900
-      Role: arn:aws:iam::595380434278:role/service-role/LambdaRole
+      Role: arn:aws:iam::595380434278:role/service-role/LambdaRole        
+      Tags:
+        
       # Environment:
       #   Variables:
       #     DB_USER: xxx
