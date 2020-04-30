@@ -2,5 +2,10 @@
  "custom_palette": ["#60489D", "#46BB93", "#F9B74D", "#2D2D2D", "#9F1253", "#A9A8A8", "#56DCE3", "#4260AD"],
  "channels": ["email", "mobile", "social", "web"],
  "n_factors": 100,
- "n_clusters": 5 
+ "n_clusters": 5,
+ "reward_threshold": 7,
+ "top_k": 3,
+ "n_folds": 5,
+ "epsilon": 0.3,
+ "beta": 0.001
 }
