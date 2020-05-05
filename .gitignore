@@ -130,4 +130,9 @@ dmypy.json
 
 # Folders
 dashboards/
-data/
+data/*.csv
+data/*.pkl
+data/*.joblib
+data/*.npy
+*.vsdx
+*.psd
