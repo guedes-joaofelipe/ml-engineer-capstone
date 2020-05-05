@@ -1,3 +1,5 @@
+![Udacity Logo](./data/udacity_logo.png)
+
 # Recommendation at the Starbucks Rewards App
 
 This repository contains an implementation of a recommender system for Starbucks rewards app, a project submitted to Udacity's Machine Learning Engineer nanodegree. 
